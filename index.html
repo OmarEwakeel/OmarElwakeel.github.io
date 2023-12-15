@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en-US">
+	<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8" />
+		<title>
+		</title>
+		<style>
+			body { font-family:'Times New Roman'; font-size:12pt }
+			p { margin:0pt }
+		</style>
+	</head>
+	<body>
+			<p>
+				&lt;!DOCTYPE html&gt;
+			</p>
+			<p>
+				&lt;html lang="en"&gt;
+			</p>
+			<p>
+				&lt;head&gt;
+			</p>
+			<p>
+				&#xa0; &lt;meta charset="UTF-8"&gt;
+			</p>
+			<p>
+				&#xa0; &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+			</p>
+			<p>
+				&#xa0; &lt;title&gt;Gas Sensor Readings&lt;/title&gt;
+			</p>
+			<p>
+				&#xa0; &lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"&gt;&lt;/script&gt;
+			</p>
+			<p>
+				&lt;/head&gt;
+			</p>
+			<p>
+				&lt;body&gt;
+			</p>
+			<p>
+				&#xa0;
+			</p>
+			<p>
+				&lt;div&gt;
+			</p>
+			<p>
+				&#xa0; &lt;h1&gt;Gas Sensor Readings&lt;/h1&gt;
+			</p>
+			<p>
+				&#xa0; &lt;div id="chart-container"&gt;&lt;/div&gt;
+			</p>
+			<p>
+				&lt;/div&gt;
+			</p>
+			<p>
+				&#xa0;
+			</p>
+			<p>
+				&lt;script&gt;
+			</p>
+			<p>
+				&#xa0; $(document).ready(function(){
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0; // ThingSpeak Read API URL
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0; var apiUrl = "https://api.thingspeak.com/channels/2381079/feeds.json?api_key=EOZ9V9MPUJBWDJG5&amp;results=20";
+			</p>
+			<p>
+				&#xa0;
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0; // Fetch data from ThingSpeak
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0; function fetchData() {
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; $.getJSON(apiUrl, function(data) {
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; var field1Data = [];
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; var field2Data = [];
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; $.each(data.feeds, function(key, val) {
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; field1Data.push(parseFloat(val.field1));
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; field2Data.push(parseFloat(val.field2));
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; });
+			</p>
+			<p>
+				&#xa0;
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; // Update the chart
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; updateChart(field1Data, field2Data);
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; });
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0; }
+			</p>
+			<p>
+				&#xa0;
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0; // Update the chart using Chart.js library
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0; function updateChart(field1Data, field2Data) {
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; var ctx = document.getElementById('chart-container').getContext('2d');
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; var chart = new Chart(ctx, {
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; type: 'line',
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; data: {
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; labels: Array.from({ length: field1Data.length }, (_, i) =&gt; i + 1),
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; datasets: [
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; {
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; label: 'CO Concentration (ppm)',
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; data: field1Data,
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; borderColor: 'rgba(255, 0, 0, 1)',
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; borderWidth: 1,
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; fill: false
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; },
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; {
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; label: 'Air Quality (ppm)',
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; data: field2Data,
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; borderColor: 'rgba(0, 0, 255, 1)',
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; borderWidth: 1,
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; fill: false
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; }
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; ]
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; },
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; options: {
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; scales: {
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; x: {
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; type: 'linear',
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; position: 'bottom'
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; }
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; }
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; }
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; });
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0; }
+			</p>
+			<p>
+				&#xa0;
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0; // Fetch data every 15 seconds
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0; setInterval(fetchData, 15000);
+			</p>
+			<p>
+				&#xa0;
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0; // Initial fetch
+			</p>
+			<p>
+				&#xa0;&#xa0;&#xa0; fetchData();
+			</p>
+			<p>
+				&#xa0; });
+			</p>
+			<p>
+				&lt;/script&gt;
+			</p>
+			<p>
+				&#xa0;
+			</p>
+			<p>
+				&lt;/body&gt;
+			</p>
+			<p>
+				&lt;/html&gt;
+			</p>
+			<p>
+				&#xa0;
+			</p>
+	<p style="bottom: 10px; right: 10px; position: absolute;"><a href="https://wordtohtml.net" target="_blank" style="font-size:11px; color: #d0d0d0">Converted to HTML with WordToHTML.net</a></p>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v84a3a4012de94ce1a686ba8c167c359c1696973893317" integrity="sha512-euoFGowhlaLqXsPWQ48qSkBSCFs3DPRyiwVu3FjR96cMPx+Fr+gpWRhIafcHwqwCqWS42RZhIudOvEI+Ckf6MA==" data-cf-beacon='{"rayId":"835ba80a6a350d8d","r":1,"version":"2023.10.0","token":"4581d6a58cf94e929fad52deda295622"}' crossorigin="anonymous"></script>
+</body>
+</html>
