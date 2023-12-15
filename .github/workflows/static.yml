@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Gas Sensor Readings</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+ 
+
+<div>
+
+  <h1>Gas Sensor Readings</h1>
+
+  <div id="chart-container"></div>
+
+</div>
+
+ 
+
+<script>
+
+  $(document).ready(function(){
+
+    // ThingSpeak Read API URL
+
+    var apiUrl = "https://api.thingspeak.com/channels/2381079/feeds.json?api_key=EOZ9V9MPUJBWDJG5&results=20";
+
+ 
+
+    // Fetch data from ThingSpeak
+
+    function fetchData() {
+
+      $.getJSON(apiUrl, function(data) {
+
+        var field1Data = [];
+
+        var field2Data = [];
+
+        $.each(data.feeds, function(key, val) {
+
+          field1Data.push(parseFloat(val.field1));
+
+          field2Data.push(parseFloat(val.field2));
+
+        });
+
+ 
+
+        // Update the chart
+
+        updateChart(field1Data, field2Data);
+
+      });
+
+    }
+
+ 
+
+    // Update the chart using Chart.js library
+
+    function updateChart(field1Data, field2Data) {
+
+      var ctx = document.getElementById('chart-container').getContext('2d');
+
+      var chart = new Chart(ctx, {
+
+        type: 'line',
+
+        data: {
+
+          labels: Array.from({ length: field1Data.length }, (_, i) => i + 1),
+
+          datasets: [
+
+            {
+
+              label: 'CO Concentration (ppm)',
+
+              data: field1Data,
+
+              borderColor: 'rgba(255, 0, 0, 1)',
+
+              borderWidth: 1,
+
+              fill: false
+
+            },
+
+            {
+
+              label: 'Air Quality (ppm)',
+
+              data: field2Data,
+
+              borderColor: 'rgba(0, 0, 255, 1)',
+
+              borderWidth: 1,
+
+              fill: false
+
+            }
+
+          ]
+
+        },
+
+        options: {
+
+          scales: {
+
+            x: {
+
+              type: 'linear',
+
+              position: 'bottom'
+
+            }
+
+          }
+
+        }
+
+      });
+
+    }
+
+ 
+
+    // Fetch data every 15 seconds
+
+    setInterval(fetchData, 15000);
+
+ 
+
+    // Initial fetch
+
+    fetchData();
+
+  });
+
+</script>
+
+ 
+
+</body>
+
+</html>
+
+ 
